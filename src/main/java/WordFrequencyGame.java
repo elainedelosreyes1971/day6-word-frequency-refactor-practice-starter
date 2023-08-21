@@ -12,7 +12,6 @@ public class WordFrequencyGame {
         } else {
 
             try {
-                //split the input string with 1 to n pieces of spaces
                 String[] words = inputStr.split(SPACE_DELIMITER);
 
                 List<WordFrequencyInfo> wordFrequencyInfoList = new ArrayList<>();
@@ -20,7 +19,7 @@ public class WordFrequencyGame {
                     WordFrequencyInfo wordFrequencyInfo = new WordFrequencyInfo(word, 1);
                     wordFrequencyInfoList.add(wordFrequencyInfo);
                 }
-                //get the wordFrequencyMap for the next step of sizing the same word
+
                 Map<String, List<WordFrequencyInfo>> wordFrequencyMap = getListMap(wordFrequencyInfoList);
 
                 List<WordFrequencyInfo> frequencyInfos = new ArrayList<>();
@@ -51,7 +50,6 @@ public class WordFrequencyGame {
     private Map<String, List<WordFrequencyInfo>> getListMap(List<WordFrequencyInfo> wordFrequencyInfoList) {
         Map<String, List<WordFrequencyInfo>> map = new HashMap<>();
         for (WordFrequencyInfo wordFrequencyInfo : wordFrequencyInfoList) {
-//       map.computeIfAbsent(input.getValue(), k -> new ArrayList<>()).add(input);
             if (!map.containsKey(wordFrequencyInfo.getWord())) {
                 ArrayList arr = new ArrayList<>();
                 arr.add(wordFrequencyInfo);
