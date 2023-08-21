@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class WordFrequencyGame {
 
@@ -9,53 +10,40 @@ public class WordFrequencyGame {
     public String getResult(String inputStr) {
         if (inputStr.split(SPACE_DELIMITER).length == 1) {
             return inputStr + " 1";
-        } else {
+        }
+        try {
+            String[] words = inputStr.split(SPACE_DELIMITER);
+            Map<String, Integer> wordFrequencyMap = getWordFrequencyCache(words);
 
-            try {
-                String[] words = inputStr.split(SPACE_DELIMITER);
-
-                List<WordFrequencyInfo> wordFrequencyInfoList = new ArrayList<>();
-                for (String word : words) {
-                    WordFrequencyInfo wordFrequencyInfo = new WordFrequencyInfo(word, 1);
-                    wordFrequencyInfoList.add(wordFrequencyInfo);
-                }
-
-                Map<String, List<WordFrequencyInfo>> wordFrequencyMap = getWordFrequencyCache(wordFrequencyInfoList);
-
-                List<WordFrequencyInfo> frequencyInfos = new ArrayList<>();
-                for (Map.Entry<String, List<WordFrequencyInfo>> entry : wordFrequencyMap.entrySet()) {
-                    WordFrequencyInfo wordFrequencyInfo = new WordFrequencyInfo(entry.getKey(), entry.getValue().size());
-                    frequencyInfos.add(wordFrequencyInfo);
-                }
-                wordFrequencyInfoList = frequencyInfos;
-
-                wordFrequencyInfoList.sort((firstWord, secondWord) -> secondWord.getWordCount() - firstWord.getWordCount());
-
-                return generatePrintLines(wordFrequencyInfoList);
-            } catch (Exception e) {
-                return "Calculate Error";
-            }
+            return generatePrintLines(wordFrequencyMap);
+        } catch (Exception e) {
+            return "Calculate Error";
         }
     }
 
-    private static String generatePrintLines(List<WordFrequencyInfo> wordFrequencyInfoList) {
+    private static String generatePrintLines(Map<String, Integer> wordFrequencyInfoMap) {
         StringJoiner joiner = new StringJoiner(NEWLINE_DELIMITER);
-        for (WordFrequencyInfo word : wordFrequencyInfoList) {
-            String s = word.getWord() + SPACE_CHAR + word.getWordCount();
+        for (Map.Entry<String, Integer> entry : wordFrequencyInfoMap.entrySet()) {
+            String s = entry.getKey() + SPACE_CHAR + entry.getValue();
             joiner.add(s);
         }
+
         return joiner.toString();
     }
 
-    private Map<String, List<WordFrequencyInfo>> getWordFrequencyCache(List<WordFrequencyInfo> wordFrequencyInfoList) {
-        Map<String, List<WordFrequencyInfo>> wordFrequencyCache = new HashMap<>();
-        wordFrequencyInfoList.forEach(wordFrequencyInfo -> {
-            String word = wordFrequencyInfo.getWord();
+    private Map<String, Integer> getWordFrequencyCache(String[] words) {
+        Map<String, Integer> wordFrequencyCache = new HashMap<>();
+        Arrays.asList(words).forEach(word -> {
+            Integer count = wordFrequencyCache.get(word);
             if (!wordFrequencyCache.containsKey(word)) {
-                wordFrequencyCache.put(word, new ArrayList<>());
+                count = 0;
             }
-            wordFrequencyCache.get(word).add(wordFrequencyInfo);
+            count += 1;
+            wordFrequencyCache.put(word, count);
         });
-        return wordFrequencyCache;
+        return wordFrequencyCache.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByValue(Comparator.reverseOrder()))
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e1, LinkedHashMap::new));
     }
 }
