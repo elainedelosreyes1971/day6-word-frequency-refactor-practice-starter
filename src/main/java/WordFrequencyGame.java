@@ -1,3 +1,5 @@
+import exceptions.CalculateError;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -17,7 +19,7 @@ public class WordFrequencyGame {
 
             return generatePrintLines(wordFrequencyMap);
         } catch (Exception e) {
-            return "Calculate Error";
+            throw new CalculateError();
         }
     }
 
