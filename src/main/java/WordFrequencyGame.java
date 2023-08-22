@@ -26,8 +26,8 @@ public class WordFrequencyGame {
     private static String generatePrintLines(Map<String, Integer> wordFrequencyInfoMap) {
         StringJoiner joiner = new StringJoiner(NEWLINE_DELIMITER);
         for (Map.Entry<String, Integer> entry : wordFrequencyInfoMap.entrySet()) {
-            String s = entry.getKey() + SPACE_CHAR + entry.getValue();
-            joiner.add(s);
+            String finalString = entry.getKey() + SPACE_CHAR + entry.getValue();
+            joiner.add(finalString);
         }
 
         return joiner.toString();
